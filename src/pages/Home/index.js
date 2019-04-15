@@ -12,6 +12,7 @@ class Home extends Component {
     // access to player in all event handlers via event.target
     // event.target.pauseVideo();
     console.log('player ready')
+    this.setState({playerInstance: event.target})
   }
 
   updateVideoId = (e) => {
