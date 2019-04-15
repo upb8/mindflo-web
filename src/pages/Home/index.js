@@ -5,9 +5,94 @@ import "./style.scss";
 class Home extends Component {
   state = {
     videoId: "mg7netw1JuM",
-    videoStatus: 'Play',
+    videoStatus: 'Pause',
     playerInstance: null
   }
+
+  constructor(args) {
+    super(args);
+    let webSocket = new WebSocket('wss://subscriptions.ap-northeast-1.graph.cool/v1/cjuhavbfm4dew0136f5svjec8', 'graphql-subscriptions');
+    webSocket.onopen = (event) => {
+      const message = {
+        id: '1',
+        type: 'init'
+      }     
+      console.log('initiated')
+      webSocket.send(JSON.stringify(message))
+    }
+
+    // webSocket.addEventListener('message', function (event) {
+    // });
+    webSocket.onmessage = (event) => {
+      console.log('Message from server ', event.data);
+      const data = JSON.parse(event.data)
+      switch (data.type) {
+        case 'init_success': {
+          console.log('init_success, the handshake is complete')
+          const message = {
+            id: '2',
+            type: 'subscription_start',
+            query: `
+              subscription youtubePlayer {
+                YoutubePlayer(
+                  filter: {
+                    mutation_in: [CREATED, UPDATED]
+                    node: {
+                      id: "cjuibfqka0g0a0146mdnvw3et"
+                    }
+                  }
+                ) {
+                  mutation
+                  node {
+                    id
+                    playing
+                    user {
+                      id
+                      name
+                    }
+                  }
+                }
+              }
+            `
+          }      
+          webSocket.send(JSON.stringify(message))
+          break;
+        }
+        case 'init_fail': {
+          console.log('init fail')
+          break;
+        }
+        case 'subscription_data': {
+          console.log('subscription data has been received')
+          console.log(data)
+          // change the state 
+          if(data.payload.data.YoutubePlayer.node.playing){
+            this.state.playerInstance.playVideo();
+            this.setState({videoStatus: 'Play'})
+          } else {
+            this.state.playerInstance.pauseVideo();
+            this.setState({videoStatus: 'Pause'})
+          }
+          break;
+        }
+        case 'subscription_success': {
+          console.log('subscription_success')
+          console.log(data)
+          break;
+        }
+        case 'subscription_fail': {
+          console.log('subscription fail')
+          break;
+        }
+        default : {
+          console.log('keep alive')
+          console.log(data)
+          break;
+        }
+      }
+    }
+  }
+
   onPlayerReady = (event) => {
     // access to player in all event handlers via event.target
     // event.target.pauseVideo();
@@ -25,9 +110,9 @@ class Home extends Component {
 
   togglePlayStatus = () => {
     if(this.state.videoStatus === 'Play'){
-      this.state.playerInstance.pauseVideo();
-    } else {
       this.state.playerInstance.playVideo();      
+    } else {
+      this.state.playerInstance.pauseVideo();    
     }
     this.setState({videoStatus: this.state.videoStatus === 'Play' ? 'Pause' : 'Play'});
   }
