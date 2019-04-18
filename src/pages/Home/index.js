@@ -141,7 +141,7 @@ class Home extends Component {
 
 			setTimeout(() => {
 				this.setState({ control: this.state.videoStatus === 'Play' ? 'Halt' : 'Auto' });
-				console.log('State Control : ', this.state.control); // Halt
+				console.log('From SetTimeOut State Control : ', this.state.control); // Halt
 				if (this.state.control === 'Auto') {
 					this.state.playerInstance.pauseVideo();
 					console.log('Break Time');
