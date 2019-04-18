@@ -7,7 +7,8 @@ class Home extends Component {
 		videoId: 'mg7netw1JuM',
 		videoStatus: 'Play',
 		playerInstance: null,
-		valBtn: '►'
+		valBtn: '❚ ❚',
+		control: 'Auto'
 	};
 
 	constructor(args) {
@@ -72,10 +73,10 @@ class Home extends Component {
 					// change the state
 					if (data.payload.data.YoutubePlayer.node.playing) {
 						this.state.playerInstance.playVideo();
-						this.setState({ videoStatus: 'Play' });
+						this.setState({ videoStatus: 'Play', valBtn: '❚ ❚' });
 					} else {
 						this.state.playerInstance.pauseVideo();
-						this.setState({ videoStatus: 'Pause' });
+						this.setState({ videoStatus: 'Pause', valBtn: '►' });
 					}
 					break;
 				}
@@ -119,9 +120,40 @@ class Home extends Component {
 			this.state.playerInstance.pauseVideo();
 		}
 		this.setState({
-			videoStatus: this.state.videoStatus === 'Play' ? 'Pause' : 'Play',
+			videoStatus: this.state.videoStatus === 'Play' ? 'Pause' : 'Play', // Play
+			control: this.state.videoStatus === 'Play' ? 'Halt' : 'Auto',
 			valBtn: this.state.videoStatus === 'Play' ? '❚ ❚' : '►'
 		});
+		console.log('From Toggle Play videostatus :', this.state.videoStatus);
+		console.log('From Toggle Play :', this.state.control);
+	};
+
+	togglePomodoro = () => {
+		console.log(this.state.videoStatus);
+		if (this.state.videoStatus === 'Play') {
+			this.state.playerInstance.playVideo();
+			this.setState({
+				videoStatus: this.state.videoStatus === 'Play' ? 'Pause' : 'Play',
+				control: this.state.videoStatus === 'Play' ? 'Halt' : 'Auto',
+				valBtn: this.state.videoStatus === 'Play' ? '❚ ❚' : '►'
+			}); // switched to Pause
+			console.log('From togglePomodoro : ', this.state.control); // Auto
+
+			setTimeout(() => {
+				this.setState({ control: this.state.videoStatus === 'Play' ? 'Halt' : 'Auto' });
+				console.log('State Control : ', this.state.control); // Halt
+				if (this.state.control === 'Auto') {
+					this.state.playerInstance.pauseVideo();
+					console.log('Break Time');
+					this.setState({
+						videoStatus: this.state.videoStatus === 'Play' ? 'Pause' : 'Play',
+						valBtn: this.state.videoStatus === 'Play' ? '❚ ❚' : '►'
+					});
+				} else {
+					console.log('USER MANUALLY PAUSED');
+				}
+			}, 5000);
+		}
 	};
 
 	render() {
@@ -138,6 +170,7 @@ class Home extends Component {
 				<div className="player-controls">
 					<input type="text" placeholder="Insert Youtube video link or id" onBlur={this.updateVideoId} />
 					<input type="button" value={this.state.valBtn} onClick={this.togglePlayStatus} />
+					<input type="button" value="5s" onClick={this.togglePomodoro} />
 				</div>
 			</div>
 		);
