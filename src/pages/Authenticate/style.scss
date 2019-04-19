@@ -1,0 +1,43 @@
+@import '../../styles/variables.scss';
+
+.page-container {
+	height: 100vh;
+    width: 100%;
+	background: white;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	.form {
+		color: $white;
+		text-align: center;
+		width: 50%;
+		background: $dark;
+		margin: auto;
+		padding: $gutter-unit;
+		border-radius: $gutter-unit/4;
+	}
+	input {
+		width: 100%;
+		background: $white;
+		color: $dark;
+		font-size: $gutter-unit;
+		text-align: center;
+		border: 0;
+		border-radius: $gutter-unit/2;
+	}
+	input::placeholder {
+		color: $grey;
+	}
+	button {
+		width: 100%;
+		height: 4rem;
+		background: $green;
+		color: $dark;
+		border-radius: $gutter-unit/4;
+		font-size: $gutter-unit;
+		font-weight: 800;
+	}
+	.footer-note {
+		margin-top: $gutter-unit;
+	}
+}

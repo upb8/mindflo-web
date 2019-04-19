@@ -2,16 +2,15 @@ import React, { Fragment } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import Home from './pages/Home';
-import SignUp from './pages/SignUp';
-import SignIn from './pages/SignIn';
+import Authenticate from './pages/Authenticate';
+
 
 function AppRouter() {
 	return (
 		<Router>
 			<Fragment>
-				<Route exact path="/" exact component={SignUp} />
-				<Route path="/app" exact component={Home} />
-				<Route path="/sign-in" exact component={SignIn} />
+				<Route exact path="/" exact component={Authenticate} />
+				<Route path="/home" exact component={Home} />
 			</Fragment>
 		</Router>
 	);
