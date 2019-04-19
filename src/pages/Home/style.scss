@@ -24,14 +24,13 @@ iframe {
 	left: 26vw;
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="email"] {
 	width: 40vw;
 	background: #423c3c;
 	font-family: 'Segoe UI';
 	font-size: 2rem;
 	text-align: center;
-	border: 1px solid black;
-	border-right: none;
 	color: white;
 }
 
@@ -46,5 +45,4 @@ input[type=button] {
 	font-family: 'Segoe UI';
 	font-size: 2rem;
 	width: 10vw;
-	border: 1px solid black;
 }
